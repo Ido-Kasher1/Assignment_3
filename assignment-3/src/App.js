@@ -1,9 +1,25 @@
 import './App.css';
+import { useState } from 'react';
+
+import blank from './symbols/blank.png';
+import ex from './symbols/x.png';
+import oh from './symbols/o.png';
 
 function App() {
-  const gameState = 'X to move'; // template
-  const symbol = 'https://i0.wp.com/dowse.co.uk/wp-content/uploads/2020/03/white-square-1.png?fit=600%2C600&ssl=1'; // placeholder
-  const boardSymbols = [symbol, symbol, symbol, symbol, symbol, symbol, symbol, symbol, symbol];
+  const [boardSymbols, setBoardSymbols] = useState(Array(9).fill(blank));
+  const [isXNext, setIsXNext] = useState(true);
+
+  const gameState = `${isXNext ? 'X' : 'O'} to move`;
+
+  const handleClick = (index) => {
+    if (boardSymbols[index] === blank) {
+      const newBoard = [...boardSymbols];
+      newBoard[index] = isXNext ? ex : oh;
+
+      setBoardSymbols(newBoard);
+      setIsXNext(!isXNext);
+    }
+  };
 
   function calculateWinner(squares) {
     const lines = [
@@ -32,14 +48,15 @@ function App() {
         {
           boardSymbols.map((val, ind) => {
             return (
-              <img className="symbol" src={symbol} alt="XO"></img>
+              <img className="symbol" src={val} alt="XO" onClick={() => handleClick(ind)}></img>
             )
           })
         }
       </div>
       <button className="resetBtn" onClick={resetGame}> RESET </button>
     </div>
+
   );
 }
-
+  
 export default App;
